@@ -17,14 +17,14 @@ public class ContController {
     private ContService contService;
 
 
-    @PostMapping("/signIn")
-    public ResponseEntity<ContResponse> signIn(@RequestBody AuthenticationRequest authenticationRequest) {
+    @PostMapping("/login")
+    public ResponseEntity<ContResponse> login(@RequestBody AuthenticationRequest authenticationRequest) {
         log.info("Trying to login {}", authenticationRequest.getUsername());
         return ResponseEntity.ok(contService.signIn(authenticationRequest));
     }
 
     @PostMapping("/validateToken")
-    public ResponseEntity<ContResponse> signIn(@RequestParam String token) {
+    public ResponseEntity<ContResponse> validateToken(@RequestParam String token) {
         log.info("Trying to validate token {}", token);
         return ResponseEntity.ok(contService.validateToken(token));
     }
