@@ -1,0 +1,43 @@
+#app:
+#    jwt:
+#        expiration-in-ms: 864000
+#        header:
+#            string: Authorization
+#        secret: ArbitrarySercetKey
+#        token:
+#            prefix: Bearer
+server:
+  port: 1111
+
+spring:
+    application:
+      name: authorization-service
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        password: root
+        url: jdbc:mysql://localhost:3306/management_intern
+        username: root
+    main:
+        allow-circular-references: true
+    mvc:
+        pathmatch:
+            matching-strategy: ant_path_matcher
+    jackson:
+      deserialization:
+        FAIL_ON_IGNORED_PROPERTIES: false
+      serialization:
+        INDENT_OUTPUT: false
+        WRITE_DATES_AS_TIMESTAMPS: false
+        WRITE_BIGDECIMAL_AS_PLAIN: true
+
+
+management:
+  health:
+    livenessState.enabled: true
+    readinessState.enabled: true
+  endpoint.health.probes.enabled: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
