@@ -29,10 +29,4 @@ public class ContController {
         return ResponseEntity.ok(contService.validateToken(token));
     }
 
-    @GetMapping(value = "/merge", produces = "application/json")
-    public ResponseEntity<String> oareMerge()
-    {
-        return ResponseEntity.ok("merge frate jneboon?");
-    }
-
 }

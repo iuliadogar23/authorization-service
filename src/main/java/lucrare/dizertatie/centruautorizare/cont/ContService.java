@@ -5,10 +5,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lucrare.dizertatie.centruautorizare.dto.ContResponse;
-import lucrare.dizertatie.centruautorizare.exception.AppException;
 import lucrare.dizertatie.centruautorizare.util.AuthenticationRequest;
+import lucrare.dizertatie.common.exception.EntityNotFoundException;
+import lucrare.dizertatie.common.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +33,7 @@ public class ContService {
 
     public ContResponse signIn(AuthenticationRequest credentialsDto) {
         Cont cont = contRepository.findByUsername(credentialsDto.getUsername())
-                .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
+                .orElseThrow(UserNotFoundException::new);
 
         if (cont.getPassword().equals(credentialsDto.getPassword()))
         {
@@ -44,11 +44,7 @@ public class ContService {
             return contResponse;
         }
 
-//        if (passwordEncoder.matches(CharBuffer.wrap(credentialsDto.getPassword()), cont.getPassword())) {
-//            return contMapper.toUserDto(cont, createToken(cont));
-//        }
-
-        throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
+        throw new UserNotFoundException("Invalid password");
     }
 
     public ContResponse validateToken(String token) {
@@ -57,10 +53,10 @@ public class ContService {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
-        Cont contOptional = contRepository.findByUsername(username).orElse(null);
+        Cont contOptional = contRepository.findByUsername(username).orElseThrow(EntityNotFoundException::new);
 
         if (contOptional == null) {
-            throw new AppException("User not found", HttpStatus.NOT_FOUND);
+            throw new UserNotFoundException();
         }
         ContResponse contResponse = new ContResponse();
         contResponse.setId(contOptional.getId());
